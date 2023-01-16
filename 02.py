@@ -1,11 +1,5 @@
 
-sample_data = """forward 5
-down 5
-forward 8
-up 3
-down 8
-forward 2"""
-
+from utils import get_data_lines
 
 def part_one(data):
     horizontal = depth = aim = 0
@@ -43,11 +37,7 @@ def part_two(data):
 
 
 if __name__ == '__main__':
-    if False:
-        data = sample_data.split('\n')
-    else:
-        inp_data = open('./data/2.txt', 'r').readlines()
-        data = [x.strip() for x in inp_data]
-
-    part_one(data)
-    part_two(data)
+    for i in [True, False]:
+        data = get_data_lines(2, use_sample=i)
+        part_one(data)
+        part_two(data)
