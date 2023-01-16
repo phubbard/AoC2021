@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from utils import make_2d_array, get_column, get_data_lines
 
 
@@ -25,7 +27,7 @@ def parse_lines(data_lines):
     return data_lines
 
 
-def orchestrate(data_2d):
+def part_one(data_2d):
     num_cols = len(data_2d[0])
 
     gamma = ''
@@ -42,8 +44,26 @@ def orchestrate(data_2d):
     print(f'{gamma=} {epsilon=} {g_int=} {e_int=} {e_int * g_int=}')
 
 
+def part_two(data_2d):
+    o2_rating = co2_rating = 0
+    num_cols = len(data_2d[0])
+
+    local_data = deepcopy(data_2d)
+
+    for idx in range(num_cols):
+        cur_col = get_column(data_2d, idx)
+        a, b = most_common(cur_col)
+        # Filter data - save only rows where the bit in the current column matches
+        # TODO use filter?
+
+        # Do the converse using b - co2 scrubber rating
+        # TODO
+
+
 if __name__ == '__main__':
     test_most_common()
 
-    data = get_data_lines(3, use_sample=False)
-    orchestrate(data)
+    for step in [True, False]:
+        data = get_data_lines(3, use_sample=step)
+        part_one(data)
+        part_two(data)
