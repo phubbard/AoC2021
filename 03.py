@@ -16,22 +16,22 @@ def parse_lines(data_lines):
     num_cols = len(data_lines[0])
     num_rows = len(data_lines)
 
-    data = make_2d_array(num_rows, num_cols, '0')
+    array = make_2d_array(num_rows, num_cols, '0')
 
     for row_idx, line in enumerate(data_lines):
         for col_idx, character in enumerate(line):
-            data[row_idx][col_idx] = character
+            array[row_idx][col_idx] = character
 
     return data_lines
 
 
-def orchestrate(data):
-    num_cols = len(data[0])
+def orchestrate(data_2d):
+    num_cols = len(data_2d[0])
 
     gamma = ''
     epsilon = ''
     for idx in range(num_cols):
-        cur_col = get_column(data, idx)
+        cur_col = get_column(data_2d, idx)
         g, e = most_common(cur_col)
         gamma += str(g)
         epsilon += str(e)

@@ -1,8 +1,9 @@
 
 from utils import get_data_lines
 
+
 def part_one(data):
-    horizontal = depth = aim = 0
+    horizontal = depth = 0
     for line in data:
         tokens = line.split(' ')
         value = int(tokens[1])
@@ -13,8 +14,7 @@ def part_one(data):
                 depth += value
             case 'up':
                 depth -= value
-            case _:
-                assert(False)
+
     print(f'{horizontal=} {depth=} {horizontal * depth=}')
 
 
