@@ -1,4 +1,4 @@
-from utils import clean_lines, make_2d_array, get_column
+from utils import make_2d_array, get_column, get_data_lines
 
 sample_data = """00100
 11110
@@ -40,7 +40,6 @@ def parse_lines(data_lines):
 
 def orchestrate(data):
     num_cols = len(data[0])
-    num_rows = len(data)
 
     gamma = ''
     epsilon = ''
@@ -59,10 +58,5 @@ def orchestrate(data):
 if __name__ == '__main__':
     test_most_common()
 
-    if False:
-        data_lines = clean_lines(sample_data.split('\n'))
-    else:
-        data_lines = clean_lines(open('./data/3.txt', 'r').readlines())
-
-    data = parse_lines(data_lines)
+    data = get_data_lines(sample_data, 3, use_sample=False)
     orchestrate(data)
