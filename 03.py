@@ -1,5 +1,4 @@
 from copy import deepcopy
-
 from utils import make_2d_array, get_column, get_data_lines
 
 
