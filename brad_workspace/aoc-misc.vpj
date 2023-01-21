@@ -91,6 +91,8 @@
             <F     N="../*.cu" Recurse="1" Excludes=""/>
 
             <F     N="../*.dockerfile" Recurse="1" Excludes=""/>
+
+            <F     N="../data/*.txt" Recurse="1" Excludes=""/>
         </Folder>
 
     </Files>
