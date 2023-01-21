@@ -1,3 +1,6 @@
+
+# https://adventofcode.com/2021/day/3#part2
+
 from copy import deepcopy
 from utils import make_2d_array, get_column, get_data_lines
 
@@ -47,16 +50,23 @@ def part_two(data_2d):
     o2_rating = co2_rating = 0
     num_cols = len(data_2d[0])
 
-    local_data = deepcopy(data_2d)
+    o2_data = deepcopy(data_2d)
+    co2_data = deepcopy(data_2d)
 
     for idx in range(num_cols):
         cur_col = get_column(data_2d, idx)
         a, b = most_common(cur_col)
         # Filter data - save only rows where the bit in the current column matches
-        # TODO use filter?
+        o2_data = list(filter(lambda x: int(x[0]) == a, o2_data))
+        co2_data = list(filter(lambda x: int(x[0]) == b, co2_data))
 
-        # Do the converse using b - co2 scrubber rating
-        # TODO
+        # Done?
+        if len(o2_data) == 1:
+            o2_rating = o2_data[0]
+        if len(co2_data) == 1:
+            co2_rating = co2_data[0]
+
+    print(f'{o2_rating=} {co2_rating=}')
 
 
 if __name__ == '__main__':
