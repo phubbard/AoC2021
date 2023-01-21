@@ -14,6 +14,9 @@ def most_common(array):
 
 def test_most_common():
     assert (most_common('011110011100') == (1, 0))
+    assert (most_common('000111100100') == (0, 1))
+    assert (most_common('101010101010') == (1, 0))
+    assert (most_common('111111000000') == (1, 0))
 
 
 def parse_lines(data_lines):
@@ -54,19 +57,25 @@ def part_two(data_2d):
     co2_data = deepcopy(data_2d)
 
     for idx in range(num_cols):
-        cur_col = get_column(data_2d, idx)
+        cur_col = get_column(o2_data, idx)
         a, b = most_common(cur_col)
         # Filter data - save only rows where the bit in the current column matches
         o2_data = list(filter(lambda x: int(x[idx]) == a, o2_data))
-        co2_data = list(filter(lambda x: int(x[idx]) == b, co2_data))
-
         # Done?
         if len(o2_data) == 1:
             o2_rating = int(o2_data[0], 2)
+            break
+
+    for idx in range(num_cols):
+        cur_col = get_column(co2_data, idx)
+        a, b = most_common(cur_col)
+        co2_data = list(filter(lambda x: int(x[idx]) == b, co2_data))
+
         if len(co2_data) == 1:
             co2_rating = int(co2_data[0], 2)
+            break
 
-    print(f'{o2_rating=} {co2_rating=}')
+    print(f'{o2_rating=} {co2_rating=} {o2_rating * co2_rating=}')
 
 
 if __name__ == '__main__':
