@@ -37,7 +37,6 @@ def part_two(data):
 
 
 if __name__ == '__main__':
-    for i in [True, False]:
-        data = get_data_lines(2, use_sample=i)
+    for data in [get_data_lines(2)]:
         part_one(data)
         part_two(data)

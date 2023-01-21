@@ -14,11 +14,13 @@ def get_column(data, col_idx):
     return [row[col_idx] for row in data]
 
 
-def get_data_lines(problem_number, use_sample=False):
-    # Return either sample or real data file based on the problem number. Normal
+def get_data_lines(problem_number):
+    # Return a tuple of (sample data, full data)
+    # Based on the problem number. Normal
     # pattern is to have line-specific parsers that operate on the return from this.
     sample_file = f'./data/{problem_number}s.txt'
     data_file = f'./data/{problem_number}.txt'
 
-    filename = sample_file if use_sample else data_file
-    return clean_lines(open(filename, 'r').readlines())
+    sample_data = clean_lines(open(f'./data/{problem_number}s.txt', 'r').readlines())
+    full_data = clean_lines(open(f'./data/{problem_number}.txt', 'r').readlines())
+    return (sample_data, full_data)

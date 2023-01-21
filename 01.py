@@ -4,8 +4,8 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    data_lines = get_data_lines(1, use_sample=False)
-    data = [int(x) for x in data_lines]
+    sample, full = get_data_lines(1)
+    data = [int(x) for x in full]
     running_sum = 0
     for idx in range(1, len(data)):
         if data[idx - 1] < data[idx]:

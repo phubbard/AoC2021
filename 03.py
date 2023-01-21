@@ -62,7 +62,7 @@ def part_two(data_2d):
 if __name__ == '__main__':
     test_most_common()
 
-    for step in [True, False]:
-        data = get_data_lines(3, use_sample=step)
-        part_one(data)
-        part_two(data)
+    sample, full = get_data_lines(3)
+    for step in [sample, full]:
+        part_one(step)
+        part_two(step)
