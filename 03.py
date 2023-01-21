@@ -57,14 +57,14 @@ def part_two(data_2d):
         cur_col = get_column(data_2d, idx)
         a, b = most_common(cur_col)
         # Filter data - save only rows where the bit in the current column matches
-        o2_data = list(filter(lambda x: int(x[0]) == a, o2_data))
-        co2_data = list(filter(lambda x: int(x[0]) == b, co2_data))
+        o2_data = list(filter(lambda x: int(x[idx]) == a, o2_data))
+        co2_data = list(filter(lambda x: int(x[idx]) == b, co2_data))
 
         # Done?
         if len(o2_data) == 1:
-            o2_rating = o2_data[0]
+            o2_rating = int(o2_data[0], 2)
         if len(co2_data) == 1:
-            co2_rating = co2_data[0]
+            co2_rating = int(co2_data[0], 2)
 
     print(f'{o2_rating=} {co2_rating=}')
 
