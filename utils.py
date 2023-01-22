@@ -47,4 +47,4 @@ def draw_coordinate_line_closed(tuple_from, tuple_to):
     assert count_nonzero_dimensions < 2
 
     raise Exception("This was never finished.  Next time!")
-    
+
