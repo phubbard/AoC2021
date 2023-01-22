@@ -32,10 +32,12 @@ if __name__ == '__main__':
                  ("First_test",  sample, 18, 26),
                  ("Second_test", sample, 80, 5934),
                  ("Real_data",   full,   80, 361169),
+                 ("Real_data",   full,  256, -1),
           ]:
         print(f"STARTING {label}")
         school = School(data[0])
         for day in range(days):
+            print(f"Now day {day}")
             school.school_pass_day()
         found_total = school.school_get_total()
         print(f"  {expected_total=} and {found_total=}")
