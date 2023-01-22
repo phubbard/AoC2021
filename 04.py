@@ -23,7 +23,7 @@ def is_bingo(data_2d) -> bool:
     if num_true >= num_rows:
         return True
 
-    diag_two = [data_2d[num_rows - x][x] for x in range(num_rows)]
+    diag_two = [data_2d[(num_rows - x) - 1][x] for x in range(num_rows)]
     num_true = sum(diag_two)
     if num_true >= num_rows:
         return True
@@ -56,7 +56,12 @@ def test_is_bingo():
         [1, 0, 0]
     ]
     assert is_bingo(arr)
-
+    arr = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ]
+    assert not is_bingo(arr)
 
 
 
