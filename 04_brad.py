@@ -1,5 +1,6 @@
 from copy import deepcopy
 from utils import make_2d_array, get_column, get_data_lines
+from 04 import is_bingo
 
 
 DIMENSION = 5
@@ -36,9 +37,32 @@ class Board:
                 row += entry
             print_func(row)
 
+    def board_mark(self, drawn_number):
+        for row_index in range(DIMENSION):
+            for col_index in range(DIMENSION):
+                value  = self.__values[row_index][col_index]
+                if value == drawn_number:
+                    self.__called[row_index][col_index] = 1
+
+
+    def board_score(self):
+        """Returns None if no bingo, board score otherwise."""
+
+        if not is_bingo(self.__called):
+            return None
+
+        sum = 0
+        for row_index in range(DIMENSION):
+            for col_index in range(DIMENSION):
+                value  = self.__values[row_index][col_index]
+                called = self.__called[row_index][col_index]
+                if called:
+                    sum += value
+        return sum
+
 def part_one(data_2d):
     def _next(): return data_2d.pop(0)
-    number_draw = _next().split(',')
+    number_draw_list = _next().split(',')
     board_list = []
     while len(data_2d) > 0:
         _next() # discard empty line
@@ -46,6 +70,15 @@ def part_one(data_2d):
         board_list.append(board)
 
     print(f"Saw {len(board_list)} boards!")
+    for drawn_number in number_draw_list:
+        print(f"Next is -> {drawn_number}")
+        for board in board_list:
+            board.board_mark(drawn_number)
+
+            score = board.board_score()
+            if score is not None:
+                board.board_show()
+                print(f"SCORE IS {score}")
     board_list[0].board_show(print)
 
 def part_two(data_2d):
