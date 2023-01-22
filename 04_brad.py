@@ -1,6 +1,6 @@
 from copy import deepcopy
 from utils import make_2d_array, get_column, get_data_lines
-from 04 import is_bingo
+from utils_04 import is_bingo
 
 
 DIMENSION = 5
@@ -30,10 +30,10 @@ class Board:
                 called = self.__called[row_index][col_index]
                 pre  = ' '
                 post = ' '
-                if called:
+                if called > 0:
                     pre  = '<'
                     post = '>'
-                entry = f"{pre}{value:2}{post} "
+                entry = f"{pre}{value:02}{post} "
                 row += entry
             print_func(row)
 
@@ -56,13 +56,13 @@ class Board:
             for col_index in range(DIMENSION):
                 value  = self.__values[row_index][col_index]
                 called = self.__called[row_index][col_index]
-                if called:
+                if not called:
                     sum += value
         return sum
 
 def part_one(data_2d):
     def _next(): return data_2d.pop(0)
-    number_draw_list = _next().split(',')
+    number_draw_list = [int(x) for x in _next().split(',')]
     board_list = []
     while len(data_2d) > 0:
         _next() # discard empty line
@@ -77,9 +77,11 @@ def part_one(data_2d):
 
             score = board.board_score()
             if score is not None:
-                board.board_show()
+                score *= drawn_number
+                board.board_show(print)
                 print(f"SCORE IS {score}")
-    board_list[0].board_show(print)
+                return
+    raise Exception("UNEXPECED NOT FOUNd")
 
 def part_two(data_2d):
     print("Not started!")

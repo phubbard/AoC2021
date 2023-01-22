@@ -18,15 +18,15 @@ def is_bingo(data_2d) -> bool:
         if num_true >= num_rows:
             return True
 
-    diag_one = [data_2d[x][x] for x in range(num_rows)]
-    num_true = sum(diag_one)
-    if num_true >= num_rows:
-        return True
-
-    diag_two = [data_2d[(num_rows - x) - 1][x] for x in range(num_rows)]
-    num_true = sum(diag_two)
-    if num_true >= num_rows:
-        return True
+    # diag_one = [data_2d[x][x] for x in range(num_rows)]
+    # num_true = sum(diag_one)
+    # if num_true >= num_rows:
+    #     return True
+    # 
+    # diag_two = [data_2d[(num_rows - x) - 1][x] for x in range(num_rows)]
+    # num_true = sum(diag_two)
+    # if num_true >= num_rows:
+    #     return True
 
     return False
 
