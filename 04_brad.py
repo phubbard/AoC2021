@@ -16,6 +16,7 @@ class Board:
 
         self.__values = raw_2d
         self.__called = called_2d
+        self.__score  = None
 
         assert len(self.__values)    == DIMENSION
         assert len(self.__values[2]) == DIMENSION
@@ -45,7 +46,7 @@ class Board:
                     self.__called[row_index][col_index] = 1
 
 
-    def board_score(self):
+    def board_score(self, drawn_number):
         """Returns None if no bingo, board score otherwise."""
 
         if not is_bingo(self.__called):
@@ -58,7 +59,12 @@ class Board:
                 called = self.__called[row_index][col_index]
                 if not called:
                     sum += value
-        return sum
+        score = sum * drawn_number
+        self.__score = score
+        return score
+
+    def board_get_score(self):
+        return self.__score
 
 def part_one(data_2d):
     def _next(): return data_2d.pop(0)
@@ -75,16 +81,40 @@ def part_one(data_2d):
         for board in board_list:
             board.board_mark(drawn_number)
 
-            score = board.board_score()
+            score = board.board_score(drawn_number)
             if score is not None:
-                score *= drawn_number
                 board.board_show(print)
                 print(f"SCORE IS {score}")
                 return
     raise Exception("UNEXPECED NOT FOUNd")
 
 def part_two(data_2d):
-    print("Not started!")
+    def _next(): return data_2d.pop(0)
+    number_draw_list = [int(x) for x in _next().split(',')]
+    board_list = []
+    completed_board_list = []
+    while len(data_2d) > 0:
+        _next() # discard empty line
+        board = Board([_next() for _ in range(DIMENSION)])
+        board_list.append(board)
+
+    print(f"Saw {len(board_list)} boards!")
+    for drawn_number in number_draw_list:
+
+        board_list = list(filter(lambda x: x not in completed_board_list, board_list))
+
+        print(f"Next is -> {drawn_number}")
+        for board in board_list:
+            board.board_mark(drawn_number)
+
+            score = board.board_score(drawn_number)
+            if score is not None:
+                board.board_show(print)
+                print(f"SCORE IS {score}")
+                completed_board_list.append(board)
+
+    last_score = completed_board_list[-1].board_get_score()
+    print(f"There are {len(completed_board_list)} and last score is {last_score}")
 
 
                
@@ -97,5 +127,5 @@ if __name__ == '__main__':
 
     sample, full = get_data_lines(4)
     for step in [sample, full]:
-        part_one(step)
-        part_two(step)
+        part_one(deepcopy(step))
+        part_two(deepcopy(step))
