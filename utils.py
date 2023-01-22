@@ -24,3 +24,27 @@ def get_data_lines(problem_number):
     sample_data = clean_lines(open(f'./data/{problem_number}s.txt', 'r').readlines())
     full_data = clean_lines(open(f'./data/{problem_number}.txt', 'r').readlines())
     return (sample_data, full_data)
+
+def draw_coordinate_line_closed(tuple_from, tuple_to):
+    """Return a list of integer points between two tuples, including the endpoints.
+
+    At the time of this writing, this does not support diagonals: only one dimension
+    of endpoint coordinates is allowed to differ between from and to.
+
+    """
+    assert len(tuple_from) == len(tuple_to)
+
+    list_delta = []
+    for x in range(len(tuple_from)):
+        value_from = tuple_from[x]
+        value_to   = tuple_to[x]
+        assert isinstance(value_from, int)
+        assert isinstance(value_to,   int)
+
+        list_delta.append(value_to - value_from)
+
+    count_nonzero_dimensions = len([x for x in list_delta if x != 0])
+    assert count_nonzero_dimensions < 2
+
+    raise Exception("This was never finished.  Next time!")
+    
