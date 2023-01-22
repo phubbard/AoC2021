@@ -1,4 +1,4 @@
-
+import math
 from utils import *
 
 
@@ -89,53 +89,27 @@ def draw_vertical(rcmd, data2d):
     return data2d
 
 
-def draw_upright_diagonal(rcmd, data2d):
+def insert_line(rcmd, data2d):
+    # Extract coordinates
     col1 = rcmd[0]
     row1 = rcmd[1]
     col2 = rcmd[2]
     row2 = rcmd[3]
-    assert row1 > row2
-    assert col2 > col1
-
-    for idx in range(col1, col2 + 1):
-        row = row1 - idx
-        data2d[row][idx] += 1
-
+    # Get differences
+    dcol = col2 - col1
+    drow = row2 - row1
+    # Make sure it's not the same point ---otherwise gcd will fall over
+    assert (dcol ** 2 + drow ** 2 > 0)
+    g = math.gcd(dcol, drow)
+    # Divide out by gcd so that we will step through the integer points on the line
+    dgcol = int(dcol / g)
+    dgrow = int(drow / g)
+    # Confirming that everything is doing what is expected
+    # print("Col delta: ", dcol, "\t Row delta: ", drow, "\t gcd:", g, "Simplified coords:", dgcol, dgrow)
+    # Step through all fo the integer points between the two endpoints incrementing the data array
+    for k in range(g + 1):
+        data2d[row1 + k * dgrow][col1 + k * dgcol] += 1
     return data2d
-
-
-def draw_downright_diagonal(rcmd, data2d):
-    col1 = rcmd[0]
-    row1 = rcmd[1]
-    col2 = rcmd[2]
-    row2 = rcmd[3]
-    assert row1 < row2
-    assert col1 < col2
-
-    for idx in range(row1, row2 + 1):
-        data2d[idx][col1 + idx] += 1
-    return data2d
-
-
-def draw_diagonal(rcmd, data2d):
-    col1 = rcmd[0]
-    row1 = rcmd[1]
-    col2 = rcmd[2]
-    row2 = rcmd[3]
-
-    if row1 < row2 and col1 < col2:
-        # Down and to the right
-        return draw_downright_diagonal(rcmd, data2d)
-    if row1 > row2 and col1 < col2:
-        # Up and to the right
-        return draw_upright_diagonal(rcmd, data2d)
-    if row1 > row2 and col1 < col2:
-        # down and to the left
-        return draw_upright_diagonal((col2, row2, col1, row1), data2d)
-    if row1 > row2 and col1 > col2:
-        # up and to the left
-        return draw_downright_diagonal((col2, row2, col1, row1), data2d)
-    pass
 
 
 def part_two(commands):
@@ -145,12 +119,8 @@ def part_two(commands):
     data = make_2d_array(dim, dim)
     print(f'{len(commands)=} {num_cols=} {num_rows=}')
     for command in commands:
-        if horizontal(command):
-            draw_horizontal(command, data)
-        elif vertical(command):
-            draw_vertical(command, data)
-        else:
-            draw_diagonal(command, data)
+        insert_line(command, data)
+
     if num_cols < 80:
         print_map(data)
 
@@ -165,7 +135,7 @@ def part_two(commands):
 
 if __name__ == '__main__':
     sample, full = get_data_lines(5)
-    for commands in [sample]:
+    for commands in [sample, full]:
         cmd_tuples = parse_lines(commands)
         part_one(cmd_tuples)
         part_two(cmd_tuples)
