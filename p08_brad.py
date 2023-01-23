@@ -123,5 +123,8 @@ if __name__ == '__main__':
 
     print(f"count remaining is {len(hypotheses_could_be_7)}")
 
+    test_data = sample[1]
+    print(f"Lets focus on {test_data}")
+
 
 
