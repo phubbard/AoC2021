@@ -1,4 +1,5 @@
 import collections
+from copy import deepcopy
 
 from utils import *
 
@@ -100,7 +101,7 @@ class Hypothesis:
 
 
 if __name__ == '__main__':
-    sample, full = get_data_lines(7)
+    sample, full = get_data_lines(8)
     
     for x in range(NUMBER_OF_DIGITS):
         total_illuminated = len(seven_segment_canonical[x])
@@ -123,8 +124,64 @@ if __name__ == '__main__':
 
     print(f"count remaining is {len(hypotheses_could_be_7)}")
 
-    test_data = sample[1]
-    print(f"Lets focus on {test_data}")
+    all_hypotheses = []
+    for p in permutation(ALL_SEGMENTS_IN_ORDER):
+        all_hypotheses += [Hypothesis(p)]
+
+
+
+    for cur_line in sample:
+        # Input | output
+        tokens = cur_line.split('|')
+        print(f"Lets focus on {tokens=}")
+        input_tokens = tokens[0].strip().split(' ')
+        output_tokens = tokens[1].strip().split(' ')
+        print(f"Lets focus on {input_tokens=}")
+
+        remaining_hypotheses = deepcopy(all_hypotheses)
+
+        normalized_tokens = {}
+
+        for token in input_tokens:
+            exploded = [c for c in token]
+            exploded.sort()
+            reglued = ''.join(exploded)
+            print(f"{token=} sorted is {reglued=}")
+            normalized_tokens[reglued] = True
+
+            for known_len, known_digit in [
+                       (2, 1),
+                       (3, 7),
+                       (4, 4),
+                    ]:
+                if len(reglued) != known_len: continue
+
+                filtered_hypos = []
+                for h in remaining_hypotheses:
+                    generated_digit = h.hypothesis_generate(known_digit)
+                    print(f"{h=} generates {generated_digit=}")
+                    if reglued == generated_digit:
+                        filtered_hypos += [h]
+                print(f"count remaining is {len(filtered_hypos)}")
+                remaining_hypotheses = filtered_hypos
+
+            print(f"Okay brute it...")
+            sub_hypothesis_list = []
+            for hypo in remaining_hypotheses:
+                good_hypo = True
+                for digit in range(NUMBER_OF_DIGITS):
+                    if hypo.hypothesis_generate(digit) not in normalized_tokens:
+                        print(f"REJECTION ON {digit}!")
+                        good_hypo = False
+                if good_hypo:
+                    print(f"THIS ONE GOOD")
+                    sub_hypothesis_list += [hypo]
+
+            print(f"After all that, {len(sub_hypothesis_list)} remain.")
+
+
+
+        break
 
 
 
