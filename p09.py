@@ -8,7 +8,7 @@ def low_point(npdata, row, col) -> bool:
     num_cols = npdata.shape[1]
     datum = npdata[row][col]
 
-    # Easy case - interior point
+    # Easy case - interior point - four neighbors
     if 0 < row and row <= (num_rows - 2) and 0 < col and col <= (num_cols - 2):
         up = datum < npdata[row - 1][col]
         down = datum < npdata[row + 1][col]
@@ -16,25 +16,27 @@ def low_point(npdata, row, col) -> bool:
         right = datum < npdata[row][col + 1]
         return (up and down and left and right)
 
+    # Top corners - 2 to check
     if row == 0:
         if col == 0:
             return datum < npdata[row + 1][col] and datum < npdata[row][col + 1]
         elif col == num_cols - 1:
             return datum < npdata[row][col - 1] and datum < npdata[row + 1][col]
 
+    # Bottom corners
     if row == num_rows - 1:
         if col == 0:
             return datum < npdata[row - 1][col] and datum < npdata[row][col + 1]
         elif col == num_cols - 1:
             return datum < npdata[row - 1][col] and datum < npdata[row][col - 1]
 
-    # Have done all four corner and center already, so left or right edges are handled this way
+    # Have done all four corner and center already, so left or right edges are handled this way - three to check
     if col == 0:
         return datum < npdata[row - 1][col] and datum < npdata[row + 1][col] and datum < npdata[row][col + 1]
     if col == num_cols - 1:
         return datum < npdata[row - 1][col] and datum < npdata[row + 1][col] and datum < npdata[row][col - 1]
 
-    # top and bottom edges
+    # top and bottom edges - three to check
     if row == 0:
         return datum < npdata[row][col - 1] and datum < npdata[row][col + 1] and datum < npdata[row + 1][col]
     elif row == num_rows - 1:
@@ -63,5 +65,5 @@ if __name__ == '__main__':
                     low_points += 1
                     risk_score = 1 + npdata[row][col]
                     risk_total += risk_score
-                    print(f'low at {row=},{col=} {npdata[row][col]=} {risk_score=}')
+                    # print(f'low at {row=},{col=} {npdata[row][col]=} {risk_score=}')
         print(f'{low_points=} {risk_total=}')
