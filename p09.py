@@ -14,7 +14,7 @@ def low_point(npdata, row, col) -> bool:
         down = datum < npdata[row + 1][col]
         left = datum < npdata[row][col - 1]
         right = datum < npdata[row][col + 1]
-        return (up and down and left and right)
+        return up and down and left and right
 
     # Top corners - 2 to check
     if row == 0:
