@@ -89,7 +89,7 @@ if __name__ == '__main__':
             new_codebook[manual] = resultant
         log(f" codebook has size {len(new_codebook)}...")
 
-        do_old = True
+        do_old = False
 
         for step in range(40):
             log(f"{step=}")
