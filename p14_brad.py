@@ -64,9 +64,9 @@ if __name__ == '__main__':
             
         order = 3
 
-        for manual_permute in find_permutations(dumb_dict.keys(), order):
-            resultant = run_rules(manual_permute, sample_pi)
-            manual = ''.join(manual_permute)
+        for expanded in find_combinations(dumb_dict.keys(), order):
+            resultant = run_rules(expanded, sample_pi)
+            manual = ''.join(expanded)
             log(f"We think {manual=} resolves to {resultant=}")
             new_codebook[manual] = resultant
 
