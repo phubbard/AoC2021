@@ -79,7 +79,7 @@ if __name__ == '__main__':
             sample_pi[tokens[0]] = tokens[1]
             new_codebook[tokens[0]] = tokens[0][0] + tokens[1] + tokens[0][1]
             
-        order = 6
+        order = 8
 
         log(f"Building codebook...")
         for expanded in do_all_brad_combos(dumb_dict.keys(), order):
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
         do_old = True
 
-        for step in range(15):
+        for step in range(40):
             log(f"{step=}")
             if do_old:
                 old_template = run_rules(sample_template, sample_pi)
