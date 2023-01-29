@@ -1,4 +1,4 @@
-from utils import get_data_lines
+from utils import get_data_lines, find_permutations
 
 
 def run_rules(polymer, rules):
@@ -19,4 +19,5 @@ if __name__ == '__main__':
         tokens = value.split(' -> ')
         sample_pi.append((tokens[0], tokens[1],))
     answ = run_rules(sample_template, sample_pi)
+
     assert answ == 'NCNBCHB'

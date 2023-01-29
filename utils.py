@@ -1,4 +1,11 @@
 
+from itertools import permutations
+
+
+def find_permutations(input_chars, length=8):
+    return permutations(input_chars, r=length)
+
+
 def clean_lines(input_lines):
     # Remove newlines and such that fuck up the parser
     return [x.strip() for x in input_lines]
