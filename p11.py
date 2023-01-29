@@ -11,5 +11,5 @@ def print_map(data2d):
 if __name__ == '__main__':
     sample, full = load_2d_arrays(11)
     print_map(sample)
-    
+
     print_map(full)

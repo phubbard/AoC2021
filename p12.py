@@ -1,8 +1,6 @@
 
 import collections
-
 from utils import *
-from copy import deepcopy
 
 def log(line):
     print(f"P12: {line}")
@@ -113,8 +111,5 @@ if __name__ == '__main__':
                         next_warren = Warren(a_warren, next_cave)
                         candidate_warrens[next_path] = next_warren
         log(f"Path count is {len(completed_paths)}")
-
-
-        
 
 
