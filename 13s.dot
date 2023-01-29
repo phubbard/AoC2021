@@ -1,0 +1,30 @@
+strict graph  {
+fs;
+end;
+he;
+DX;
+start;
+pj;
+zg;
+sl;
+RW;
+WI;
+fs -- end;
+fs -- he;
+fs -- DX;
+fs -- pj;
+end -- zg;
+he -- DX;
+he -- pj;
+he -- RW;
+he -- WI;
+he -- zg;
+DX -- start;
+DX -- pj;
+start -- pj;
+start -- RW;
+pj -- zg;
+pj -- RW;
+zg -- sl;
+zg -- RW;
+}

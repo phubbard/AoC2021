@@ -1,0 +1,38 @@
+strict graph  {
+vn;
+DD;
+qm;
+MV;
+xy;
+end;
+KG;
+kw;
+start;
+ko;
+lj;
+kh;
+VH;
+vn -- DD;
+vn -- start;
+vn -- MV;
+vn -- ko;
+DD -- qm;
+DD -- xy;
+DD -- ko;
+qm -- xy;
+qm -- kw;
+qm -- MV;
+qm -- ko;
+MV -- xy;
+MV -- lj;
+MV -- ko;
+MV -- start;
+xy -- end;
+end -- KG;
+end -- kw;
+KG -- lj;
+kw -- lj;
+start -- ko;
+lj -- kh;
+lj -- VH;
+}
