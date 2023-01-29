@@ -40,7 +40,7 @@ def run_bigger_rules(polymer, rules, chunk_size):
     for chunk in chunks:
         result = rules.get(chunk, chunk)
         new_polymer += result[1:]
-        log(f"For {chunk=} we found {result=}")
+        #log(f"For {chunk=} we found {result=}")
     return new_polymer
 
 
@@ -50,16 +50,16 @@ full_distinct = {'H': True, 'K': True, 'P': True, 'S': True, 'B': True, 'V': Tru
 
 
 def do_all_brad_combos(iterable, length):
-    log(f"{iterable=} {length=}")
+    #log(f"{iterable=} {length=}")
     rv = [[x] for x in iterable]
     while length > 1:
         new_rv = []
         for item in iterable:
-            log(f"   {item=}")
+            #log(f"   {item=}")
             for previous in rv:
-                log(f"      {previous=}")
+                #log(f"      {previous=}")
                 new_word = [item] + previous
-                log(f"{new_word=}")
+                #log(f"{new_word=}")
                 new_rv.append(new_word)
         rv = new_rv
         length = length - 1
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     sample, full = get_data_lines(14)
     for dataset, dumb_dict, expected in [
                 (sample, sample_distinct, 2188189693529),
-            #    (full, full_distinct, -1),
+                (full, full_distinct, -1),
                 ]:
         sample_template = dataset[0]
         sample_pi = {}
@@ -79,22 +79,27 @@ if __name__ == '__main__':
             sample_pi[tokens[0]] = tokens[1]
             new_codebook[tokens[0]] = tokens[0][0] + tokens[1] + tokens[0][1]
             
-        order = 5
+        order = 6
 
+        log(f"Building codebook...")
         for expanded in do_all_brad_combos(dumb_dict.keys(), order):
             resultant = run_rules(expanded, sample_pi)
             manual = ''.join(expanded)
-            log(f"We think {manual=} resolves to {resultant=}")
+            # log(f"We think {manual=} resolves to {resultant=}")
             new_codebook[manual] = resultant
+        log(f" codebook has size {len(new_codebook)}...")
 
-        for step in range(10):
-            log(f"STARTING WITH {sample_template=}")
-            old_template = run_rules(sample_template, sample_pi)
-            new_template = run_bigger_rules(sample_template, new_codebook, order)
+        do_old = True
+
+        for step in range(15):
             log(f"{step=}")
-            assert old_template == new_template
+            if do_old:
+                old_template = run_rules(sample_template, sample_pi)
+            new_template = run_bigger_rules(sample_template, new_codebook, order)
+            if do_old:
+                assert old_template == new_template
 
-            sample_template = old_template
+            sample_template = new_template
 
         counter = collections.Counter(sample_template)
         sorted_out = counter.most_common()
