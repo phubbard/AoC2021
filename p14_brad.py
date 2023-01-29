@@ -18,14 +18,14 @@ def run_rules(polymer, rules):
     for traverse_pair in pairs:
         insertion = ''
         for parent_pair, child in rules:
-            log(f"given {traverse_pair=}, evaluate rule with {parent_pair}->{child}")
+            #log(f"given {traverse_pair=}, evaluate rule with {parent_pair}->{child}")
             if traverse_pair != parent_pair: continue
             if len(insertion) > 0: raise Exception("MNost bad")
             insertion = child
             break
         new_polymer += insertion
         new_polymer += traverse_pair[1]
-        log(f"Now {new_polymer=}")
+        #log(f"Now {new_polymer=}")
 
     return new_polymer
 
@@ -34,19 +34,21 @@ def run_rules(polymer, rules):
 
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
-    sample_template = sample[0]
-    sample_pi = []
-    for idx, value in enumerate(sample[2:]):
-        tokens = value.split(' -> ')
-        sample_pi.append((tokens[0], tokens[1],))
+    for dataset, expected in [(sample, 1588), (full, 2549)]:
+        sample_template = dataset[0]
+        sample_pi = []
+        for idx, value in enumerate(dataset[2:]):
+            tokens = value.split(' -> ')
+            sample_pi.append((tokens[0], tokens[1],))
 
-    for step in range(10):
-        sample_template = run_rules(sample_template, sample_pi)
+        for step in range(10):
+            sample_template = run_rules(sample_template, sample_pi)
 
-    counter = collections.Counter(sample_template)
-    sorted_out = counter.most_common()
-    log(f"{sorted_out=}")
-    score = sorted_out[0][1] - sorted_out[-1][1]
-    log(f"{score=}")
+        counter = collections.Counter(sample_template)
+        sorted_out = counter.most_common()
+        log(f"{sorted_out=}")
+        score = sorted_out[0][1] - sorted_out[-1][1]
+        log(f"{score=}")
+        assert score == expected
 
 
