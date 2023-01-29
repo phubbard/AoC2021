@@ -1,3 +1,6 @@
+
+import collections
+
 from utils import get_data_lines
 
 def log(string):
@@ -36,5 +39,14 @@ if __name__ == '__main__':
     for idx, value in enumerate(sample[2:]):
         tokens = value.split(' -> ')
         sample_pi.append((tokens[0], tokens[1],))
-    answ = run_rules(sample_template, sample_pi)
-    assert answ == 'NCNBCHB'
+
+    for step in range(10):
+        sample_template = run_rules(sample_template, sample_pi)
+
+    counter = collections.Counter(sample_template)
+    sorted_out = counter.most_common()
+    log(f"{sorted_out=}")
+    score = sorted_out[0][1] - sorted_out[-1][1]
+    log(f"{score=}")
+
+
