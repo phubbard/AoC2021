@@ -1,9 +1,9 @@
 
-from itertools import combinations
+from itertools import combinations_with_replacement
 
 
 def find_combinations(input_chars, length=8):
-    return combinations(input_chars, r=length)
+    return combinations_with_replacement(input_chars, r=length)
 
 
 def clean_lines(input_lines):
