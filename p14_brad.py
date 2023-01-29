@@ -24,8 +24,9 @@ def run_rules(polymer, rules):
 
     return new_polymer
 
+sample_distinct={'C': True, 'H': True, 'B': True, 'N': True}
 
-
+full_distinct = {'H': True, 'K': True, 'P': True, 'S': True, 'B': True, 'V': True, 'C': True, 'F': True, 'N': True, 'O': True}
 
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
