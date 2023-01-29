@@ -40,7 +40,7 @@ def run_bigger_rules(polymer, rules, chunk_size):
     for chunk in chunks:
         result = rules.get(chunk, chunk)
         new_polymer += result[1:]
-        log(f"For {chunk=} we found {result=} leading to next {new_polymer=}")
+        log(f"For {chunk=} we found {result=}")
     return new_polymer
 
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
             sample_pi[tokens[0]] = tokens[1]
             new_codebook[tokens[0]] = tokens[0][0] + tokens[1] + tokens[0][1]
             
-        order = 3
+        order = 5
 
         for expanded in do_all_brad_combos(dumb_dict.keys(), order):
             resultant = run_rules(expanded, sample_pi)
@@ -87,13 +87,12 @@ if __name__ == '__main__':
             log(f"We think {manual=} resolves to {resultant=}")
             new_codebook[manual] = resultant
 
-        for step in range(3):
+        for step in range(10):
             log(f"STARTING WITH {sample_template=}")
             old_template = run_rules(sample_template, sample_pi)
             new_template = run_bigger_rules(sample_template, new_codebook, order)
             log(f"{step=}")
-            log(f"      {old_template=}")
-            log(f"      {new_template=}")
+            assert old_template == new_template
 
             sample_template = old_template
 
