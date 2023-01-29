@@ -7,7 +7,7 @@ def log(string):
     print(f"P14: {string}")
 
 def run_rules(polymer, rules):
-    #log(f"sstarting run_rules with {polymer=} and{rules=}")
+    # log(f"sstarting run_rules with {polymer=} and{rules=}")
 
     pairs = []
     for idx in range(len(polymer) - 1):
@@ -16,14 +16,9 @@ def run_rules(polymer, rules):
     new_polymer = polymer[0]
     
     for traverse_pair in pairs:
-        insertion = ''
-        for parent_pair, child in rules:
-            #log(f"given {traverse_pair=}, evaluate rule with {parent_pair}->{child}")
-            if traverse_pair != parent_pair: continue
-            if len(insertion) > 0: raise Exception("MNost bad")
-            insertion = child
-            break
-        new_polymer += insertion
+        found = rules.get(traverse_pair, None)
+        if found:
+            new_polymer += found
         new_polymer += traverse_pair[1]
         #log(f"Now {new_polymer=}")
 
@@ -34,13 +29,16 @@ def run_rules(polymer, rules):
 
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
-    for dataset, expected in [(sample, 2188189693529), (full, -1)]:
+    for dataset, expected in [
+                (sample, 2188189693529),
+                (full, -1),
+                ]:
         sample_template = dataset[0]
-        sample_pi = []
+        sample_pi = {}
         for idx, value in enumerate(dataset[2:]):
             tokens = value.split(' -> ')
-            sample_pi.append((tokens[0], tokens[1],))
-
+            sample_pi[tokens[0]] = tokens[1]
+            
         for step in range(40):
             log(f"{step=}")
             sample_template = run_rules(sample_template, sample_pi)
