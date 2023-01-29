@@ -1,4 +1,4 @@
-from utils import get_data_lines, find_permutations
+from utils import get_data_lines, find_combinations
 
 
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         unique_chars.update(rule[1])
 
     print(f'{len(list(unique_chars))=} {list(unique_chars)=}')
-    perms = find_permutations(unique_chars, 4)
+    perms = find_combinations(unique_chars, 4)
     print(f'{len(list(perms))=}')
 
     unique_chars = set()
@@ -33,5 +33,5 @@ if __name__ == '__main__':
         unique_chars.update(rule[1])
 
     print(f'{len(list(unique_chars))=} {list(unique_chars)=}')
-    perms = find_permutations(unique_chars, 8)
+    perms = find_combinations(unique_chars, 8)
     print(f'{len(list(perms))=:,}')

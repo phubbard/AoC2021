@@ -1,9 +1,9 @@
 
-from itertools import permutations
+from itertools import combinations
 
 
-def find_permutations(input_chars, length=8):
-    return permutations(input_chars, r=length)
+def find_combinations(input_chars, length=8):
+    return combinations(input_chars, r=length)
 
 
 def clean_lines(input_lines):
