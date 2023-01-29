@@ -2,7 +2,7 @@
 
 import collections
 
-from utils import get_data_lines, find_permutations
+from utils import *
 
 def log(string):
     print(f"P14: {string}")
@@ -48,6 +48,23 @@ sample_distinct = {'C': True, 'H': True, 'B': True, 'N': True}
 
 full_distinct = {'H': True, 'K': True, 'P': True, 'S': True, 'B': True, 'V': True, 'C': True, 'F': True, 'N': True, 'O': True}
 
+
+def do_all_brad_combos(iterable, length):
+    log(f"{iterable=} {length=}")
+    rv = [[x] for x in iterable]
+    while length > 1:
+        new_rv = []
+        for item in iterable:
+            log(f"   {item=}")
+            for previous in rv:
+                log(f"      {previous=}")
+                new_word = [item] + previous
+                log(f"{new_word=}")
+                new_rv.append(new_word)
+        rv = new_rv
+        length = length - 1
+    return rv
+
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
     for dataset, dumb_dict, expected in [
@@ -64,7 +81,7 @@ if __name__ == '__main__':
             
         order = 3
 
-        for expanded in find_combinations(dumb_dict.keys(), order):
+        for expanded in do_all_brad_combos(dumb_dict.keys(), order):
             resultant = run_rules(expanded, sample_pi)
             manual = ''.join(expanded)
             log(f"We think {manual=} resolves to {resultant=}")
