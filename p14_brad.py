@@ -7,7 +7,7 @@ def log(string):
     print(f"P14: {string}")
 
 def run_rules(polymer, rules):
-    log(f"sstarting run_rules with {polymer=} and{rules=}")
+    #log(f"sstarting run_rules with {polymer=} and{rules=}")
 
     pairs = []
     for idx in range(len(polymer) - 1):
@@ -34,14 +34,15 @@ def run_rules(polymer, rules):
 
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
-    for dataset, expected in [(sample, 1588), (full, 2549)]:
+    for dataset, expected in [(sample, 2188189693529), (full, -1)]:
         sample_template = dataset[0]
         sample_pi = []
         for idx, value in enumerate(dataset[2:]):
             tokens = value.split(' -> ')
             sample_pi.append((tokens[0], tokens[1],))
 
-        for step in range(10):
+        for step in range(40):
+            log(f"{step=}")
             sample_template = run_rules(sample_template, sample_pi)
 
         counter = collections.Counter(sample_template)
