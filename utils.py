@@ -9,6 +9,29 @@ def make_2d_array(num_rows, num_cols, fill=0):
     return [[fill] * num_cols for _ in range(num_rows)]
 
 
+def load_2d_arrays(problem_number):
+    # some of these encode a map as a 2D array, so we should be able to reuse this.
+    sample, full = get_data_lines(problem_number)
+
+    num_rows = len(sample)
+    num_cols = len(sample[0])
+    data = make_2d_array(num_rows, num_cols)
+    for row, line in enumerate(sample):
+        for col, char in enumerate(line):
+            data[row][col] = int(char)
+    sample_2d = data
+
+    num_rows = len(full)
+    num_cols = len(full[0])
+    data = make_2d_array(num_rows, num_cols)
+    for row, line in enumerate(full):
+        for col, char in enumerate(line):
+            data[row][col] = int(char)
+    full_2d = data
+
+    return sample_2d, full_2d
+
+
 def get_column(data, col_idx):
     # No way to extract a column without numpy so Just Deal.
     return [row[col_idx] for row in data]
@@ -24,6 +47,7 @@ def get_data_lines(problem_number):
     sample_data = clean_lines(open(f'./data/{problem_number}s.txt', 'r').readlines())
     full_data = clean_lines(open(f'./data/{problem_number}.txt', 'r').readlines())
     return (sample_data, full_data)
+
 
 def draw_coordinate_line_closed(tuple_from, tuple_to):
     """Return a list of integer points between two tuples, including the endpoints.
