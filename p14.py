@@ -1,37 +1,42 @@
-from utils import get_data_lines, find_combinations
+from utils import get_data_lines
+from collections import Counter
 
 
+def score_counts(ctr: Counter):
+    rc = Counter()
+    for cur_key in ctr.keys():
+        rc[cur_key[0]] += ctr[cur_key]
+
+    return rc
 
 
 if __name__ == '__main__':
     sample, full = get_data_lines(14)
-    sample_template = sample[0]
-    sample_pt = []
-    for idx, value in enumerate(sample[2:]):
-        tokens = value.split(' -> ')
-        sample_pt.append((tokens[0], tokens[1],))
 
-    full_pt = []
-    for value in full[2:]:
-        tokens = value.split(' -> ')
-        full_pt.append((tokens[0], tokens[1]))
+    for dataset in [sample, full]:
+        polymer = dataset[0]
+        rules = {}
+        for value in dataset[2:]:
+            tokens = value.split(' -> ')
+            old_token = tokens[0]
+            new_tokens = [old_token[0] + tokens[1], tokens[1] + old_token[1]]
+            rules[old_token] = new_tokens
 
-    unique_chars = set()
-    for rule in sample_pt:
-        unique_chars.update(rule[0][0])
-        unique_chars.update(rule[0][1])
-        unique_chars.update(rule[1])
+    count_dict = Counter()
+    for idx in range(len(polymer) - 1):
+        count_dict.update([polymer[idx:idx + 2]])
 
-    print(f'{len(list(unique_chars))=} {list(unique_chars)=}')
-    perms = find_combinations(unique_chars, 4)
-    print(f'{len(list(perms))=}')
+    for idx in range(40):
+        ncd = Counter()
+        for key in count_dict.keys():
+            for cur_out in rules[key]:
+                ncd[cur_out] += count_dict[key]
+        count_dict = ncd
+    scores = score_counts(count_dict)
+    scores.update([polymer[-1]])
+    print(f'{scores=}')
+    sorted_out = scores.most_common()
+    print(f"{sorted_out=}")
+    score = sorted_out[0][1] - sorted_out[-1][1]
+    print(f"{score=}")
 
-    unique_chars = set()
-    for rule in full_pt:
-        unique_chars.update(rule[0][0])
-        unique_chars.update(rule[0][1])
-        unique_chars.update(rule[1])
-
-    print(f'{len(list(unique_chars))=} {list(unique_chars)=}')
-    perms = find_combinations(unique_chars, 8)
-    print(f'{len(list(perms))=:,}')

@@ -6,6 +6,14 @@ def find_combinations(input_chars, length=8):
     return combinations_with_replacement(input_chars, r=length)
 
 
+def find_combinations_from_scratch(input_chars, length=8):
+    rc = []
+    for i in range(length):
+        for j in range(length):
+            rc += f'{input_chars[i]}{input_chars[j]}'
+    return rc
+
+
 def clean_lines(input_lines):
     # Remove newlines and such that fuck up the parser
     return [x.strip() for x in input_lines]
