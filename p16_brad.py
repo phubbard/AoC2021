@@ -86,7 +86,9 @@ def parse_packet_from_binary(the_deque, stats):
             length_in_bits = pop_n(the_deque, 15)
             log(f"Saw operator bit count {packet_version=}/{packet_type_id=}->{length_in_bits=}")
             sub_packet = pop_subpacket_bits(the_deque, length_in_bits)
-            parse_packet_from_binary(sub_packet, stats)
+            while len(sub_packet) >= 6:
+                parse_packet_from_binary(sub_packet, stats)
+            log(f"REMAINDER COUNT IS -> {len(sub_packet)}")
         else:
             length_in_packets = pop_n(the_deque, 11)
             log(f"Saw operator packet count {packet_version=}/{packet_type_id=}->{length_in_packets=}")
@@ -111,6 +113,10 @@ if __name__ == '__main__':
         stats = parse_packet_from_hex(hex_string)
         output = stats.stats_get_sum_of_versions()
         log(f"CONCLUDED WITH {output=}")
+        if answer > 0:
+            if answer != output:
+                raise Exception("DOOMY")
+
         log(f"")
 
 
