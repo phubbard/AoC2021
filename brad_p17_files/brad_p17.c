@@ -67,15 +67,23 @@ int main()
     int best_y_velocity = 0; 
     int best_y_height   = 0; 
 
-    for (x_velocity = 0; x_velocity < 1000; x_velocity++)
+    int total_hits = 0;
+
+    for (x_velocity = -1000; x_velocity < 2000; x_velocity++)
     {
-        for (y_velocity = 0; y_velocity < 1000; y_velocity++)
+        for (y_velocity = -1000; y_velocity < 2000; y_velocity++)
         {
             // printf("trying %d, %d\n", x_velocity, y_velocity);
             int y_peak_height = 0;
-            bool is_hit;
-            evaluate(20, 30, -10, -5, x_velocity, y_velocity, &is_hit, &y_peak_height);
+            bool is_hit = false;
+
+            //evaluate(20, 30, -10, -5,
+            evaluate(257, 286, -101, -57,
+                     x_velocity, y_velocity,
+                     &is_hit, &y_peak_height);
             if (!is_hit) continue;
+
+            total_hits++;
             if (y_peak_height > best_y_height)
             {
                 best_x_velocity = x_velocity; 
@@ -90,10 +98,11 @@ int main()
         }
     }
 
-    printf("TERMINAL WAS: %d, %d  went to %d\n",
+    printf("TERMINAL WAS: %d, %d  went to highest %d, and there were %d total\n",
            best_x_velocity,
            best_y_velocity,
-           best_y_height);
+           best_y_height,
+           total_hits);
 
     int temp;
 #pragma omp parallel for private(temp)
