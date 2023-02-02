@@ -44,6 +44,9 @@ void evaluate(int x_min, int x_max,
 }
 
 
+
+
+
 int main()
 {
     printf("Openmp test...\n");
@@ -64,9 +67,9 @@ int main()
     int best_y_velocity = 0; 
     int best_y_height   = 0; 
 
-    for (x_velocity = 0; x_velocity < 10; x_velocity++)
+    for (x_velocity = 0; x_velocity < 1000; x_velocity++)
     {
-        for (y_velocity = 0; y_velocity < 10; y_velocity++)
+        for (y_velocity = 0; y_velocity < 1000; y_velocity++)
         {
             // printf("trying %d, %d\n", x_velocity, y_velocity);
             int y_peak_height = 0;
