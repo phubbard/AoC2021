@@ -45,23 +45,51 @@ def pop_literal(the_deque):
     raise Exception("Unexpected trailer")
 
 
-def parse(hex_string):
+def pop_subpacket_bits(the_deque, bits):
+    rv = []
+    for _ in range(bits):
+        rv.append(the_deque.popleft())
+    return collections.deque(rv)
+
+
+def parse_packet_from_hex(hex_string):
     as_binary = []
     for character in hex_string:
         as_binary += HEX_TO_BIN[character]
-
     as_deque = collections.deque(as_binary)
-    log(f"packet_version={pop_n(as_deque, 3)}")
-    log(f"packet_type_id={pop_n(as_deque, 3)}")
-    log(f"packet_literal={pop_literal(as_deque)}")
+    parse_packet_from_binary(as_deque)
 
+
+def parse_packet_from_binary(the_deque):
+    packet_version = pop_n(the_deque, 3)
+    packet_type_id = pop_n(the_deque, 3)
+    if packet_type_id == 4:
+        packet_literal = pop_literal(the_deque)
+        log(f"Saw literal {packet_version=}/{packet_type_id=}->{packet_literal=}")
+    else:
+        length_type_id = pop_n(the_deque, 1)
+        if length_type_id == 0:
+            length_in_bits = pop_n(the_deque, 15)
+            log(f"Saw operator bit count {packet_version=}/{packet_type_id=}->{length_in_bits=}")
+            sub_packet = pop_subpacket_bits(the_deque, length_in_bits)
+            parse_packet_from_binary(sub_packet)
+        else:
+            length_in_packets = pop_n(the_deque, 11)
+            log(f"Saw operator packet count {packet_version=}/{packet_type_id=}->{length_in_packets=}")
+            for x in range(length_in_packets):
+                log(f"Cracking subpacket {x}...")
+                parse_packet_from_binary(the_deque)
 
 
 if __name__ == '__main__':
     for hex_string, answer in [
-                ('D2FE28', -1),
+                ('D2FE28',            -1),
+                ('38006F45291200',    -1),
+                ('EE00D40C823060',    -1),
             ]:
-        parse(hex_string)
+        log(f"STARTING -> {hex_string=}")
+        parse_packet_from_hex(hex_string)
+        log(f"")
 
 
 
