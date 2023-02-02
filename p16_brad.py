@@ -69,8 +69,8 @@ def parse_packet_from_hex(hex_string):
         as_binary += HEX_TO_BIN[character]
     as_deque = collections.deque(as_binary)
     stats = Stats()
-    parse_packet_from_binary(as_deque, stats)
-    return stats
+    result = parse_packet_from_binary(as_deque, stats)
+    return stats, result
 
 
 def parse_packet_from_binary(the_deque, stats):
@@ -80,42 +80,70 @@ def parse_packet_from_binary(the_deque, stats):
     if packet_type_id == 4:
         packet_literal = pop_literal(the_deque)
         log(f"Saw literal {packet_version=}/{packet_type_id=}->{packet_literal=}")
+        rv = packet_literal
     else:
+        parameters = []
         length_type_id = pop_n(the_deque, 1)
         if length_type_id == 0:
             length_in_bits = pop_n(the_deque, 15)
             log(f"Saw operator bit count {packet_version=}/{packet_type_id=}->{length_in_bits=}")
             sub_packet = pop_subpacket_bits(the_deque, length_in_bits)
             while len(sub_packet) >= 6:
-                parse_packet_from_binary(sub_packet, stats)
+                parameters.append(parse_packet_from_binary(sub_packet, stats))
             log(f"REMAINDER COUNT IS -> {len(sub_packet)}")
         else:
             length_in_packets = pop_n(the_deque, 11)
             log(f"Saw operator packet count {packet_version=}/{packet_type_id=}->{length_in_packets=}")
             for x in range(length_in_packets):
                 log(f"Cracking subpacket {x}...")
-                parse_packet_from_binary(the_deque, stats)
+                parameters.append(parse_packet_from_binary(the_deque, stats))
+        answer = "ERROR"
+        if False: pass
+        elif packet_type_id == 0:
+            rv = sum(parameters)
+        elif packet_type_id == 1:
+            rv = 1
+            for parameter in parameters: rv = rv * parameter
+        elif packet_type_id == 2:
+            rv = min(parameters)
+        elif packet_type_id == 3:
+            rv = max(parameters)
+        elif packet_type_id == 5:
+            rv = 1 if parameters[0] > parameters[1] else 0
+        elif packet_type_id == 6:
+            rv = 1 if parameters[0] < parameters[1] else 0
+        elif packet_type_id == 7:
+            rv = 1 if parameters[0] == parameters[1] else 0
+        else:
+            raise Exception("evil")
+    return rv
 
 
 DATA_FROM_FILE = '420D74C3088043390499ED709E6EB49A5CC4A3A3898B7E0F44011C4CC48AC0119D049B0C500265EB8F615900180910C88129B2F0007C61C4B7F74ED7396B20020A44A4C014D005E5A72E274B4E5C4B96CC3793410078C01D82F1DA08180351661AC1920042A3CC578BA6008F802138D93352B9CFCEF61D3009A7D2268D254925569C02A92D62BF108D52C1B3E4B257B57FAE5C54400A84840267880311D23245F1007A35C79848200C4288FF0E8C01194A4E625E00A4EFEF5F5996486C400C5002800BFA402D3D00A9C4027B98093D602231C00F001D38C009500258057E601324C00D3003D400C7003DC00A20053A6F1DBDE2D4600A6802B37C4B9E872B0E44CA5FF0BFB116C3004740119895E6F7312BCDE25EF077700725B9F2B8F131F333005740169A7F92EFEB3BC8A21998027400D2CDF30F927880B4C62D6CDFFD88EB0068D2BF019A8DAAF3245B39C9CFA1D2DF9C3DB9D3E50A0164BE2A3339436993894EC41A0D10020B329334C62016C8E7A5F27C97D0663982D8EB23C5282529CDD271E8F100AE1401AA80021119E3A4511006E1E47689323585F3AEBF900AEB2B6942BD91EE8028000874238AB0C00010B8D913220A004A73D789C4D54E24816301802538E940198880371AE15C1D1007638C43856C00954C25CD595A471FE9D90056D60094CEA61933A9854E9F3801F2BBC6131001F792F6796ACB40D036605C80348C005F64F5AC374888CA42FD99A98025319EB950025713656F202200B767AB6A30E802D278F81CBA89004CD286360094FC03A7E01640245CED5A3C010100660FC578B60008641C8B105CC017F004E597E596E633BA5AB78B9C8F840C029917C9E389B439179927A3004F003511006610C658A200084C2989D0AE67BD07000606154B70E66DC0C01E99649545950B8AB34C8401A5CDA050043D319F31CB7EBCEE14'
 
 if __name__ == '__main__':
-    for hex_string, answer in [
-                ('D2FE28',                          -1),
-                ('38006F45291200',                  -1),
-                ('EE00D40C823060',                  -1),
-                ('8A004A801A8002F478',              16),
-                ('620080001611562C8802118E34',      12),
-                ('C0015000016115A2E0802F182340',    23),
-                ('A0016C880162017C3686B18A3D4780',  31),
-                (DATA_FROM_FILE,                   895),
+    for hex_string, answer_part_a, answer_part_b in [
+                ('D2FE28',                         -1,             -1),
+                ('38006F45291200',                 -1,             -1),
+                ('EE00D40C823060',                 -1,             -1),
+                ('8A004A801A8002F478',             16,             -1),
+                ('620080001611562C8802118E34',     12,             -1),
+                ('C0015000016115A2E0802F182340',   23,             -1),
+                ('A0016C880162017C3686B18A3D4780', 31,             -1),
+                ('C200B40A82',                     -1,              3),
+                ('04005AC33890',                   -1,             54),
+                ('880086C3E88112',                 -1,              7),
+                (DATA_FROM_FILE,                   895, 1148595959144),
             ]:
         log(f"STARTING -> {hex_string=}")
-        stats = parse_packet_from_hex(hex_string)
-        output = stats.stats_get_sum_of_versions()
-        log(f"CONCLUDED WITH {output=}")
-        if answer > 0:
-            if answer != output:
+        stats, output_part_b = parse_packet_from_hex(hex_string)
+        output_part_a = stats.stats_get_sum_of_versions()
+        log(f"CONCLUDED WITH {output_part_a=} and  {output_part_b=}")
+        if answer_part_a > 0:
+            if answer_part_a != output_part_a:
+                raise Exception("DOOMY")
+        if answer_part_b > 0:
+            if answer_part_b != output_part_b:
                 raise Exception("DOOMY")
 
         log(f"")
