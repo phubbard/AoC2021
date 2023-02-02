@@ -52,16 +52,30 @@ def pop_subpacket_bits(the_deque, bits):
     return collections.deque(rv)
 
 
+class Stats:
+    def __init__(self):
+        self.__version_sum = 0
+
+    def stats_saw_version(self, packet_version):
+        self.__version_sum += packet_version
+
+    def stats_get_sum_of_versions(self):
+        return  self.__version_sum
+
+
 def parse_packet_from_hex(hex_string):
     as_binary = []
     for character in hex_string:
         as_binary += HEX_TO_BIN[character]
     as_deque = collections.deque(as_binary)
-    parse_packet_from_binary(as_deque)
+    stats = Stats()
+    parse_packet_from_binary(as_deque, stats)
+    return stats
 
 
-def parse_packet_from_binary(the_deque):
+def parse_packet_from_binary(the_deque, stats):
     packet_version = pop_n(the_deque, 3)
+    stats.stats_saw_version(packet_version)
     packet_type_id = pop_n(the_deque, 3)
     if packet_type_id == 4:
         packet_literal = pop_literal(the_deque)
@@ -72,23 +86,31 @@ def parse_packet_from_binary(the_deque):
             length_in_bits = pop_n(the_deque, 15)
             log(f"Saw operator bit count {packet_version=}/{packet_type_id=}->{length_in_bits=}")
             sub_packet = pop_subpacket_bits(the_deque, length_in_bits)
-            parse_packet_from_binary(sub_packet)
+            parse_packet_from_binary(sub_packet, stats)
         else:
             length_in_packets = pop_n(the_deque, 11)
             log(f"Saw operator packet count {packet_version=}/{packet_type_id=}->{length_in_packets=}")
             for x in range(length_in_packets):
                 log(f"Cracking subpacket {x}...")
-                parse_packet_from_binary(the_deque)
+                parse_packet_from_binary(the_deque, stats)
 
 
 if __name__ == '__main__':
     for hex_string, answer in [
-                ('D2FE28',            -1),
-                ('38006F45291200',    -1),
-                ('EE00D40C823060',    -1),
+                ('D2FE28',                         -1),
+                ('38006F45291200',                 -1),
+                ('EE00D40C823060',                 -1),
+                ('8A004A801A8002F478',             16),
+                ('620080001611562C8802118E34',     12),
+                ('C0015000016115A2E0802F182340',   23),
+                ('A0016C880162017C3686B18A3D4780', 31),
+
+
             ]:
         log(f"STARTING -> {hex_string=}")
-        parse_packet_from_hex(hex_string)
+        stats = parse_packet_from_hex(hex_string)
+        output = stats.stats_get_sum_of_versions()
+        log(f"CONCLUDED WITH {output=}")
         log(f"")
 
 
