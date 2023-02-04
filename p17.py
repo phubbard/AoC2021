@@ -78,7 +78,7 @@ def part_one(target_p1):
 
 def part_two(my_target):
     count = 0
-    for x_vel in range(1, 100):
+    for x_vel in range(1, 500):
         for y_vel in range(-200, 200):
             _, hit = fire_probe(x_vel, y_vel, my_target)
             if hit:
@@ -91,7 +91,8 @@ def part_two(my_target):
 if __name__ == '__main__':
     test_in_target()
     sample, full = get_data_lines(17)
-    for dataset in [sample, full]:
+    for dataset in [full]:
         target = parse_input(dataset[0])
+        print(f'{target=}')
         part_one(target)
         part_two(target)
