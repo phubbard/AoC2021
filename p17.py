@@ -29,12 +29,12 @@ def test_in_target():
 def passed_target(x, y, target):
     if x > target['x'][1]:
         return True
-    if y < target['y'][1]:
+    if y < min(target['y']):
         return True
     return False
 
 
-def fire_probe(xvel: int, yvel: int, target: dict) -> int:
+def fire_probe(xvel: int, yvel: int, target: dict) -> tuple:
     # Given an initial x, y and target, return max Y reached if we hit the target during a step
     xpos = 0
     ypos = 0
@@ -58,24 +58,38 @@ def fire_probe(xvel: int, yvel: int, target: dict) -> int:
             break
         step += 1
 
-    return max_y if hit_target else 0
+    return max_y, hit_target
 
 
-def orchestrate(target):
+def part_one(target):
     best_height = 0
     best_params = []
-    for x_vel in range(1, 1000):
-        for y_vel in range(-1000, 1000):
-            cur_height = fire_probe(x_vel, y_vel, target)
-            if cur_height > best_height:
+    for x_vel in range(1, 100):
+        for y_vel in range(-200, 200):
+            cur_height, hit = fire_probe(x_vel, y_vel, target)
+            if cur_height > best_height and hit:
                 best_params = [x_vel, y_vel, cur_height]
                 best_height = cur_height
 
     print(f'{best_params=}')
 
 
+def part_two(target):
+    count = 0
+    for x_vel in range(1, 100):
+        for y_vel in range(-200, 200):
+            _, hit = fire_probe(x_vel, y_vel, target)
+            if hit:
+                # print(f'{x_vel}, {y_vel}')
+                count += 1
+
+    print(f'{count=}')
+
+
 if __name__ == '__main__':
     test_in_target()
     sample, full = get_data_lines(17)
     for dataset in [sample, full]:
-        orchestrate(parse_input(dataset[0]))
+        target = parse_input(dataset[0])
+        part_one(target)
+        part_two(target)
