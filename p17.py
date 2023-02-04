@@ -91,7 +91,7 @@ def part_two(my_target):
 if __name__ == '__main__':
     test_in_target()
     sample, full = get_data_lines(17)
-    for dataset in [full]:
+    for dataset in [sample, full]:
         target = parse_input(dataset[0])
         print(f'{target=}')
         part_one(target)
